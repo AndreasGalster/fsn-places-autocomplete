@@ -1,6 +1,6 @@
 {
   "name": "@andreasgalster/fsn-places-autocomplete",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "fsn-places-autocomplete is a set of basic shared styles, similar to bootstrap",
   "main": "fsn-places-autocomplete.html",
   "scripts": {
