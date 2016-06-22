@@ -1,0 +1,295 @@
+<dom-module id="fsn-places-autocomplete">
+  <style include="houseme-styles"></style>
+  <style>
+    :host {
+      display: block;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    :host[floating="true"] {
+      position: absolute;
+      top: var(--pigments-padding-sm);
+      left: var(--pigments-padding-sm);
+      right: var(--pigments-padding-sm);
+    }
+
+
+    .input-wrapper {
+      @apply(--layout-horizontal);
+    }
+
+    .input-wrapper paper-input {
+      @apply(--layout-flex);
+    }
+
+    #suggestionsWrapper {
+      display: none;
+      background-color: white;
+      position: absolute;
+      right: 0;
+      left: 0;
+      margin-top: var(--offset-top, 4px);
+    }
+
+    :host[suggestions-in-overlay="true"] #suggestionsWrapper {
+      width: 100%;
+      position: absolute;
+      z-index: 1000;
+    }
+
+    paper-item {
+      position: relative;
+      cursor: pointer;
+      color: rgba(0,0,0,0.6);
+    }
+
+    div {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    #inputWrapper {
+      padding: var(--pigments-padding-xxs);
+      background: rgba(255,255,255,0.2);
+      /*background: rgba(255,255,255,1);*/
+      border-radius: 3px;
+    }
+
+
+    #clear{
+      display: none;
+    }
+  </style>
+
+  <template>
+
+    <google-places-api api-key="AIzaSyA8fg1F_zcKxOUjY8ppOahK9634cGPVmnM" results="{{results}}" input-value="[[inputValue]]"></google-places-api>
+
+    <template is="dom-if" if="[[withBackground]]">
+      <paper-material elevation="2" id="inputWrapper">
+        <div class="input-wrapper">
+          <paper-input id="input" label="{{label}}" value="{{inputValue}}" on-keydown="_selectFirstSuggestion" no-label-float on-keyup="_handleSuggestions">
+            <paper-icon-button icon='pigments:search' suffix on-click="_selectSuggestion"></paper-icon-button>
+          </paper-input>
+        </div>
+      </paper-material>
+    </template>
+
+    <template is="dom-if" if="[[withBackground]]">
+      <div class="input-wrapper">
+        <paper-input id="input" label="{{label}}" value="{{inputValue}}" on-keydown="_selectFirstSuggestion" no-label-float on-keyup="_handleSuggestions">
+          <paper-icon-button icon='pigments:search' suffix on-click="_selectSuggestion"></paper-icon-button>
+        </paper-input>
+      </div>
+    </template>
+
+
+    <paper-material elevation="1" id="suggestionsWrapper">
+      <template is="dom-repeat" items="{{suggestions}}">
+        <paper-item on-click="_selectSuggestion">
+          <div>{{item.text}}</div>
+          <paper-ripple></paper-ripple>
+        </paper-item>
+      </template>
+    </paper-material>
+  </template>
+
+
+  </template>
+
+</dom-module>
+
+
+<script>
+  require('@polymer/polymer/polymer.html');
+  require('@polymer/paper-input/paper-input.html');
+  require('@polymer/paper-icon-button/paper-icon-button.html');
+  require('@polymer/iron-icons/iron-icons.html');
+  require('@polymer/paper-item/paper-item.html');
+  require('@polymer/paper-ripple/paper-ripple.html');
+  require('@polymer/paper-material/paper-material.html');
+
+  require('@andreasgalster/fsn-boilerplate/fsn-boilerplate.html');
+  require('@andreasgalster/fsn-places-api/fsn-places-api.html');
+
+
+
+
+  Polymer({
+
+    is: 'fsn-places-autocomplete',
+    properties: {
+
+      cityId: {
+        type: String,
+        notify: true
+      },
+
+      withBackground: {
+        type: Boolean,
+        value: false
+      }
+
+      /**
+       * `label` Text to display as the input label
+       */
+      label: String,
+
+
+      /**
+       * `source` Array of objects with the options to execute the autocomplete feature
+       */
+      source: Array,
+
+      /**
+       * `searchProperty` Property of the source objects that will be used to execute
+       * the autocomplete feature
+       */
+      searchProperty: String,
+      firstSource: String,
+
+      /**
+       * `value` Selected object from the suggestions
+       */
+      value: {
+        type: Object,
+        notify: true
+      },
+
+      /**
+       * `suggestionsInOverlay` Display the suggestions in an overlay above the next elements
+       */
+      suggestionsInOverlay: Boolean,
+
+      /**
+       * `suggestions` Array with the actual suggestions to display
+       */
+      suggestions: Array
+
+    },
+
+    // firstSource: function(array, index) {
+    //   console.log(this.suggestions);
+    //   return this.array[index];
+    // },
+
+
+    computedString: function(string) {
+      if (!string) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+
+
+    /**
+     * Hide the suggestions wrapper
+     */
+    _hideSuggestionsWrapper: function() {
+      this.$.suggestionsWrapper.style.display = 'none';
+    },
+
+    /**
+     * Event fired when the user types in the input field.
+     *
+     * @param {string} event fired
+     */
+    _handleSuggestions : function(event) {
+      var value = event.target.value;
+      // console.log(event.target.value);
+
+      if(value && value.length > 0){
+        value = value.toLowerCase();
+
+        console.log(this.source[0]);
+        console.log(this.source[0].cityname);
+        console.log(this.source[0].cityid);
+
+        this.firstSource = this.source[0];
+
+        // Search for the word in the source properties.
+        if(this.source && this.source.length > 0){
+          this.suggestions = [];
+          var length = this.source.length
+          var hasSearchProperty = this.searchProperty != null;
+          for(var i = 0; i < length; i++){
+            var item = this.source[i];
+            if(hasSearchProperty){
+              item = this.source[i][this.searchProperty];
+            }
+            console.log(this.source[i][this.searchProperty]);
+            if(item.toLowerCase().includes(value)){
+              // Adds the item to the suggestions list.
+              this.push('suggestions', {text : item , value : this.source[i].cityname});
+            }
+          }
+
+          if (this.suggestions.length > 0) {
+            this.$.suggestionsWrapper.style.display = 'block';
+          }
+        }
+      }else{
+        this.suggestions = [];
+      }
+    },
+
+
+
+    /**
+     * Event fired when the user selects a suggestion
+     *
+     * @param {Object} event fired
+     */
+    _selectFirstSuggestion : function(e) {
+
+      if(e.keyCode!==13) {
+        return;
+      }
+
+      else {
+        var selectedOption = this.suggestions[0];
+
+        this.$.input.value = selectedOption.text;
+        this.value = selectedOption.value;
+
+        setTimeout( () => {
+          this._hideSuggestionsWrapper();
+        }, 300);
+      }
+
+      // google.maps.event.trigger(this,'keydown',{keyCode:40});
+    },
+
+
+    /**
+     * Event fired when the user selects a suggestion
+     *
+     * @param {Object} event fired
+     */
+    _selectSuggestion : function(event) {
+      var selectedOption = this.suggestions[event.model.index];
+
+      this.$.input.value = selectedOption.text;
+      this.value = selectedOption.value;
+
+      setTimeout( () => {
+        this._hideSuggestionsWrapper();
+      }, 300);
+    },
+
+    /**
+     * Return the selected suggestion
+     */
+    getValue : function() {
+      return this.value;
+    }
+
+
+
+
+  });
+</script>
