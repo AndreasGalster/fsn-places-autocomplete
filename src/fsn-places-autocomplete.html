@@ -1,5 +1,5 @@
-<dom-module id="fsn-places-autocomplete">
-  <style include="houseme-styles"></style>
+<dom-module id='fsn-places-autocomplete'>
+  <style include='houseme-styles'></style>
   <style>
     :host {
       display: block;
@@ -7,7 +7,7 @@
       position: relative;
     }
 
-    :host[floating="true"] {
+    :host[floating='true'] {
       position: absolute;
       top: var(--pigments-padding-sm);
       left: var(--pigments-padding-sm);
@@ -24,6 +24,7 @@
     }
 
     #suggestionsWrapper {
+      z-index: 1;
       display: none;
       background-color: white;
       position: absolute;
@@ -32,7 +33,7 @@
       margin-top: var(--offset-top, 4px);
     }
 
-    :host[suggestions-in-overlay="true"] #suggestionsWrapper {
+    :host[suggestions-in-overlay='true'] #suggestionsWrapper {
       width: 100%;
       position: absolute;
       z-index: 1000;
@@ -65,31 +66,27 @@
   </style>
 
   <template>
+    <fsn-places-api api-key='AIzaSyA8fg1F_zcKxOUjY8ppOahK9634cGPVmnM' results={{source}} input-value=[[inputValue]]></fsn-places-api>
 
-    <google-places-api api-key="AIzaSyA8fg1F_zcKxOUjY8ppOahK9634cGPVmnM" results="{{results}}" input-value="[[inputValue]]"></google-places-api>
+    <div class='input-wrapper'>
+      <paper-input
+        id='input'
+        label={{label}}
+        value={{inputValue}}
+        required=[[required]]
+        invalid={{invalid}}
+        error-message={{errorMessage}}
+        on-blur='_selectFirstSuggestion'
+        on-keydown='_selectFirstSuggestion'
+        on-keyup='_handleSuggestions'
+        no-label-float>
+      </paper-input>
+      <!-- <paper-icon-button icon='pigments:search' suffix on-click='_selectSuggestion'></paper-icon-button> -->
+    </div>
 
-    <template is="dom-if" if="[[withBackground]]">
-      <paper-material elevation="2" id="inputWrapper">
-        <div class="input-wrapper">
-          <paper-input id="input" label="{{label}}" value="{{inputValue}}" on-keydown="_selectFirstSuggestion" no-label-float on-keyup="_handleSuggestions">
-            <paper-icon-button icon='pigments:search' suffix on-click="_selectSuggestion"></paper-icon-button>
-          </paper-input>
-        </div>
-      </paper-material>
-    </template>
-
-    <template is="dom-if" if="[[withBackground]]">
-      <div class="input-wrapper">
-        <paper-input id="input" label="{{label}}" value="{{inputValue}}" on-keydown="_selectFirstSuggestion" no-label-float on-keyup="_handleSuggestions">
-          <paper-icon-button icon='pigments:search' suffix on-click="_selectSuggestion"></paper-icon-button>
-        </paper-input>
-      </div>
-    </template>
-
-
-    <paper-material elevation="1" id="suggestionsWrapper">
-      <template is="dom-repeat" items="{{suggestions}}">
-        <paper-item on-click="_selectSuggestion">
+    <paper-material elevation='1' id='suggestionsWrapper'>
+      <template is='dom-repeat' items={{suggestions}}>
+        <paper-item on-click='_selectSuggestion'>
           <div>{{item.text}}</div>
           <paper-ripple></paper-ripple>
         </paper-item>
@@ -107,13 +104,12 @@
   require('@polymer/polymer/polymer.html');
   require('@polymer/paper-input/paper-input.html');
   require('@polymer/paper-icon-button/paper-icon-button.html');
-  require('@polymer/iron-icons/iron-icons.html');
   require('@polymer/paper-item/paper-item.html');
   require('@polymer/paper-ripple/paper-ripple.html');
   require('@polymer/paper-material/paper-material.html');
 
-  require('@andreasgalster/fsn-boilerplate/fsn-boilerplate.html');
-  require('@andreasgalster/fsn-places-api/fsn-places-api.html');
+  require('@andreasgalster/fsn-boilerplate/dist/fsn-boilerplate.html');
+  require('@andreasgalster/fsn-places-api/dist/fsn-places-api.html');
 
 
 
@@ -122,16 +118,15 @@
 
     is: 'fsn-places-autocomplete',
     properties: {
-
-      cityId: {
+      required: Boolean,
+      /**
+      * `label` Text to display as the input label
+      */
+      // inputValue: String,
+      inputValue: {
         type: String,
         notify: true
       },
-
-      withBackground: {
-        type: Boolean,
-        value: false
-      }
 
       /**
        * `label` Text to display as the input label
@@ -184,7 +179,9 @@
         return true;
       }
     },
-
+    validate: function() {
+      this.$$('paper-input').validate();
+    },
 
     /**
      * Hide the suggestions wrapper
@@ -203,28 +200,33 @@
       // console.log(event.target.value);
 
       if(value && value.length > 0){
-        value = value.toLowerCase();
+        // value = value.toLowerCase();
 
-        console.log(this.source[0]);
-        console.log(this.source[0].cityname);
-        console.log(this.source[0].cityid);
+        // console.log(this.source[0]);
+        // console.log(this.source[0].cityname);
+        // console.log(this.source[0].cityid);
 
-        this.firstSource = this.source[0];
+        // this.firstSource = this.source[0];
 
         // Search for the word in the source properties.
         if(this.source && this.source.length > 0){
           this.suggestions = [];
           var length = this.source.length
-          var hasSearchProperty = this.searchProperty != null;
+          // var hasSearchProperty = this.searchProperty != null;
           for(var i = 0; i < length; i++){
-            var item = this.source[i];
-            if(hasSearchProperty){
-              item = this.source[i][this.searchProperty];
-            }
-            console.log(this.source[i][this.searchProperty]);
-            if(item.toLowerCase().includes(value)){
+            // console.log(this.source[i]);
+            // console.log(this.source[i].cityname);
+            // console.log(this.searchProperty);
+            var item = this.source[i].cityname;
+            // if(hasSearchProperty){
+            //   item = this.source[i][this.searchProperty];
+            // }
+            // console.log(this.source[i][this.searchProperty]);
+            if(item.includes(value)){
+            // if(item.toLowerCase().includes(value)){
               // Adds the item to the suggestions list.
-              this.push('suggestions', {text : item , value : this.source[i].cityname});
+              this.push('suggestions', {text : item , value : value});
+              // this.source[i].cityname
             }
           }
 
@@ -246,11 +248,8 @@
      */
     _selectFirstSuggestion : function(e) {
 
-      if(e.keyCode!==13) {
-        return;
-      }
 
-      else {
+      if(e.keyCode==13 || e.keyCode==9) {
         var selectedOption = this.suggestions[0];
 
         this.$.input.value = selectedOption.text;
@@ -260,6 +259,26 @@
           this._hideSuggestionsWrapper();
         }, 300);
       }
+
+      else {
+        return;
+      }
+
+
+      // if(e.keyCode!==13 || e.keyCode!==9) {
+      //   return;
+      // }
+      //
+      // else {
+      //   var selectedOption = this.suggestions[0];
+      //
+      //   this.$.input.value = selectedOption.text;
+      //   this.value = selectedOption.value;
+      //
+      //   setTimeout( () => {
+      //     this._hideSuggestionsWrapper();
+      //   }, 300);
+      // }
 
       // google.maps.event.trigger(this,'keydown',{keyCode:40});
     },
