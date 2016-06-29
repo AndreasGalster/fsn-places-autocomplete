@@ -55,7 +55,6 @@
     #inputWrapper {
       padding: var(--pigments-padding-xxs);
       background: rgba(255,255,255,0.2);
-      /*background: rgba(255,255,255,1);*/
       border-radius: 3px;
     }
 
@@ -81,7 +80,6 @@
         on-keyup='_handleSuggestions'
         no-label-float>
       </paper-input>
-      <!-- <paper-icon-button icon='pigments:search' suffix on-click='_selectSuggestion'></paper-icon-button> -->
     </div>
 
     <paper-material elevation='1' id='suggestionsWrapper'>
@@ -166,12 +164,6 @@
 
     },
 
-    // firstSource: function(array, index) {
-    //   console.log(this.suggestions);
-    //   return this.array[index];
-    // },
-
-
     computedString: function(string) {
       if (!string) {
         return false;
@@ -197,36 +189,18 @@
      */
     _handleSuggestions : function(event) {
       var value = event.target.value;
-      // console.log(event.target.value);
 
       if(value && value.length > 0){
-        // value = value.toLowerCase();
-
-        // console.log(this.source[0]);
-        // console.log(this.source[0].cityname);
-        // console.log(this.source[0].cityid);
-
-        // this.firstSource = this.source[0];
 
         // Search for the word in the source properties.
         if(this.source && this.source.length > 0){
           this.suggestions = [];
           var length = this.source.length
-          // var hasSearchProperty = this.searchProperty != null;
           for(var i = 0; i < length; i++){
-            // console.log(this.source[i]);
-            // console.log(this.source[i].cityname);
-            // console.log(this.searchProperty);
             var item = this.source[i].cityname;
-            // if(hasSearchProperty){
-            //   item = this.source[i][this.searchProperty];
-            // }
-            // console.log(this.source[i][this.searchProperty]);
             if(item.includes(value)){
-            // if(item.toLowerCase().includes(value)){
               // Adds the item to the suggestions list.
               this.push('suggestions', {text : item , value : value});
-              // this.source[i].cityname
             }
           }
 
@@ -263,24 +237,6 @@
       else {
         return;
       }
-
-
-      // if(e.keyCode!==13 || e.keyCode!==9) {
-      //   return;
-      // }
-      //
-      // else {
-      //   var selectedOption = this.suggestions[0];
-      //
-      //   this.$.input.value = selectedOption.text;
-      //   this.value = selectedOption.value;
-      //
-      //   setTimeout( () => {
-      //     this._hideSuggestionsWrapper();
-      //   }, 300);
-      // }
-
-      // google.maps.event.trigger(this,'keydown',{keyCode:40});
     },
 
 
@@ -306,9 +262,6 @@
     getValue : function() {
       return this.value;
     }
-
-
-
 
   });
 </script>
