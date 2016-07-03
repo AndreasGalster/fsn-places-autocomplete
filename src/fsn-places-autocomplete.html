@@ -65,13 +65,13 @@
   </style>
 
   <template>
-    <fsn-places-api api-key='AIzaSyA8fg1F_zcKxOUjY8ppOahK9634cGPVmnM' results={{source}} input-value=[[inputValue]]></fsn-places-api>
+    <fsn-places-api api-key='AIzaSyA8fg1F_zcKxOUjY8ppOahK9634cGPVmnM' results={{source}} input-value=[[value]]></fsn-places-api>
 
     <div class='input-wrapper'>
       <paper-input
         id='input'
         label={{label}}
-        value={{inputValue}}
+        value={{value}}
         required=[[required]]
         invalid={{invalid}}
         error-message={{errorMessage}}
@@ -120,8 +120,8 @@
       /**
       * `label` Text to display as the input label
       */
-      // inputValue: String,
-      inputValue: {
+      // value: String,
+      value: {
         type: String,
         notify: true
       },
@@ -147,7 +147,7 @@
       /**
        * `value` Selected object from the suggestions
        */
-      value: {
+      selectedValue: {
         type: Object,
         notify: true
       },
@@ -227,7 +227,7 @@
         var selectedOption = this.suggestions[0];
 
         this.$.input.value = selectedOption.text;
-        this.value = selectedOption.value;
+        this.selectedValue = selectedOption.value;
 
         setTimeout( () => {
           this._hideSuggestionsWrapper();
@@ -260,7 +260,7 @@
      * Return the selected suggestion
      */
     getValue : function() {
-      return this.value;
+      return this.selectedValue;
     }
 
   });
