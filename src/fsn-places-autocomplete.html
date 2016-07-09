@@ -224,10 +224,10 @@
         var selectedOption = this.suggestions[0];
         this.$.input.value = selectedOption.text;
         this.selectedValue = selectedOption.value;
-        this.$.input.blur();
-        this._hideSuggestionsWrapper();
-        // setTimeout( () => {
-        // }, 300);
+        // this.$.input.blur();
+        setTimeout( () => {
+          this._hideSuggestionsWrapper();
+        }, 300);
       }
     },
 
@@ -240,9 +240,9 @@
       this.$.input.value = selectedOption.text;
       this.selectedValue = selectedOption.value;
       // this.value = selectedOption.value;
-      this._hideSuggestionsWrapper();
-      // setTimeout( () => {
-      // }, 300);
+      setTimeout( () => {
+        this._hideSuggestionsWrapper();
+      }, 300);
     },
 
     /**
