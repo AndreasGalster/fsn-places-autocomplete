@@ -75,8 +75,8 @@
         required=[[required]]
         invalid={{invalid}}
         error-message={{errorMessage}}
-        on-blur='_selectFirstSuggestion'
-        on-keydown='_selectFirstSuggestion'
+        on-blur='_selectFirstSuggestionBlur'
+        on-keydown='_selectFirstSuggestionKeydown'
         on-keyup='_handleSuggestions'
         no-label-float>
       </paper-input>
@@ -218,10 +218,29 @@
      * Event fired when the user selects a suggestion
      * @param {Object} event fired
      */
-    _selectFirstSuggestion : function(e) {
-      console.log('blur happened');
-      console.log(e);
+    _selectFirstSuggestionBlur: function(e) {
+      this._selectFirstSuggestion(e);
+    },
+
+
+    /**
+     * Event fired when the user selects a suggestion
+     * @param {Object} event fired
+     */
+    _selectFirstSuggestionKeydown: function(e) {
       if(e.keyCode==13 || e.keyCode==9) {
+        this._selectFirstSuggestion(e);
+      }
+    },
+
+
+    /**
+     * Event fired when the user selects a suggestion
+     * @param {Object} event fired
+     */
+    _selectFirstSuggestion : function(e) {
+        console.log(e);
+      // if(e.keyCode==13 || e.keyCode==9) {
         var selectedOption = this.suggestions[0];
         this.$.input.value = selectedOption.text;
         this.selectedValue = selectedOption.value;
@@ -229,7 +248,7 @@
         setTimeout( () => {
           this._hideSuggestionsWrapper();
         }, 300);
-      }
+      // }
     },
 
     /**
