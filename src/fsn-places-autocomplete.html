@@ -163,7 +163,6 @@
       suggestions: Array
 
     },
-
     computedString: function(string) {
       if (!string) {
         return false;
@@ -220,6 +219,7 @@
      * @param {Object} event fired
      */
     _selectFirstSuggestion : function(e) {
+      console.log('blur happened');
       if(e.keyCode==13 || e.keyCode==9) {
         var selectedOption = this.suggestions[0];
         this.$.input.value = selectedOption.text;
