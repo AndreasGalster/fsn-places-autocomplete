@@ -224,6 +224,7 @@
         var selectedOption = this.suggestions[0];
         this.$.input.value = selectedOption.text;
         this.selectedValue = selectedOption.value;
+        this.$.input.blur();
         this._hideSuggestionsWrapper();
         // setTimeout( () => {
         // }, 300);
@@ -237,7 +238,6 @@
     _selectSuggestion : function(e) {
       var selectedOption = this.suggestions[e.model.index];
       this.$.input.value = selectedOption.text;
-      this.$.input.blur();
       this.selectedValue = selectedOption.value;
       // this.value = selectedOption.value;
       this._hideSuggestionsWrapper();
