@@ -217,43 +217,31 @@
 
     /**
      * Event fired when the user selects a suggestion
-     *
      * @param {Object} event fired
      */
     _selectFirstSuggestion : function(e) {
-
-
       if(e.keyCode==13 || e.keyCode==9) {
         var selectedOption = this.suggestions[0];
-
         this.$.input.value = selectedOption.text;
         this.selectedValue = selectedOption.value;
-
-        setTimeout( () => {
-          this._hideSuggestionsWrapper();
-        }, 300);
-      }
-
-      else {
-        return;
+        this._hideSuggestionsWrapper();
+        // setTimeout( () => {
+        // }, 300);
       }
     },
 
-
     /**
      * Event fired when the user selects a suggestion
-     *
      * @param {Object} event fired
      */
     _selectSuggestion : function(event) {
       var selectedOption = this.suggestions[event.model.index];
-
       this.$.input.value = selectedOption.text;
-      this.value = selectedOption.value;
-
-      setTimeout( () => {
-        this._hideSuggestionsWrapper();
-      }, 300);
+      this.selectedValue = selectedOption.value;
+      // this.value = selectedOption.value;
+      this._hideSuggestionsWrapper();
+      // setTimeout( () => {
+      // }, 300);
     },
 
     /**
@@ -261,7 +249,7 @@
      */
     getValue : function() {
       return this.selectedValue;
-    }
+    },
 
   });
 </script>
