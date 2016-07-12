@@ -17,6 +17,10 @@
 
     .input-wrapper {
       @apply(--layout-horizontal);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 100%;
     }
 
     .input-wrapper paper-input {
@@ -43,13 +47,6 @@
       position: relative;
       cursor: pointer;
       color: rgba(0,0,0,0.6);
-    }
-
-    div {
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-      width: 100%;
     }
 
     #inputWrapper {
