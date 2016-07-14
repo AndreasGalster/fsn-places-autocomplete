@@ -139,7 +139,6 @@
        * the autocomplete feature
        */
       searchProperty: String,
-      firstSource: String,
 
       /**
        * `value` Selected object from the suggestions
@@ -157,15 +156,9 @@
       /**
        * `suggestions` Array with the actual suggestions to display
        */
-      suggestions: Array
+      suggestions: Array,
+      valid: Boolean
 
-    },
-    computedString: function(string) {
-      if (!string) {
-        return false;
-      } else {
-        return true;
-      }
     },
     validate: function() {
       this.$$('paper-input').validate();
@@ -206,6 +199,7 @@
         }
       }else{
         this.suggestions = [];
+        this.valid = false;
       }
     },
 
@@ -240,6 +234,7 @@
         var selectedOption = this.suggestions[0];
         this.$.input.value = selectedOption.text;
         this.selectedValue = selectedOption.value;
+        this.valid = true;
         // this.$.input.blur();
         setTimeout( () => {
           this._hideSuggestionsWrapper();
@@ -255,6 +250,7 @@
       var selectedOption = this.suggestions[e.model.index];
       this.$.input.value = selectedOption.text;
       this.selectedValue = selectedOption.value;
+      this.valid = true;
       // this.value = selectedOption.value;
       setTimeout( () => {
         this._hideSuggestionsWrapper();
