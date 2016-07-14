@@ -157,7 +157,10 @@
        * `suggestions` Array with the actual suggestions to display
        */
       suggestions: Array,
-      valid: Boolean
+      valid: {
+        type: Boolean,
+        notify: true
+      }
 
     },
     validate: function() {
