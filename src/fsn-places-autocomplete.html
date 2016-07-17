@@ -233,17 +233,18 @@
      * @param {Object} event fired
      */
     _selectFirstSuggestion : function(e) {
-        if(this.suggestion.length > 0) {
+        if(this.suggestions.length > 0) {
           var selectedOption = this.suggestions[0];
           this.$.input.value = selectedOption.text;
           this.selectedValue = selectedOption.value;
           this.valid = true;
-          setTimeout( () => {
-            this._hideSuggestionsWrapper();
-          }, 300);
         } else {
           this.valid = false;
         }
+
+        setTimeout( () => {
+          this._hideSuggestionsWrapper();
+        }, 300);
     },
 
     /**
