@@ -233,7 +233,7 @@
      * @param {Object} event fired
      */
     _selectFirstSuggestion : function(e) {
-        if(this.suggestion.length > 0) {}
+        if(this.suggestion.length > 0) {
           var selectedOption = this.suggestions[0];
           this.$.input.value = selectedOption.text;
           this.selectedValue = selectedOption.value;
